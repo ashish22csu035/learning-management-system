@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
-      select: false  // Don't return password by default
+      select: false
     },
 
     role: {
@@ -63,12 +63,10 @@ const userSchema = new mongoose.Schema(
       default: true
     },
 
-    // Track last login
     lastLogin: {
       type: Date
     },
 
-    // Password reset token
     resetPasswordToken: String,
     resetPasswordExpire: Date
   },
@@ -90,25 +88,25 @@ const userSchema = new mongoose.Schema(
 
 /**
  * Hash password before saving
- * This runs automatically before user.save()
+ * FIXED: Removed next parameter - Mongoose 6+ doesn't need it
  */
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function() {
   // Only hash if password is modified
   if (!this.isModified('password')) {
-    return next();
+    return;
   }
 
   try {
-    // Generate salt (random data)
+    // Generate salt
     const salt = await bcrypt.genSalt(10);
     
-    // Hash password with salt
+    // Hash password
     this.password = await bcrypt.hash(this.password, salt);
     
     console.log(`✅ Password hashed for user: ${this.email}`);
-    next();
   } catch (error) {
-    next(error);
+    console.error('❌ Error hashing password:', error);
+    throw error;
   }
 });
 
@@ -116,15 +114,13 @@ userSchema.pre('save', async function(next) {
 
 /**
  * Compare entered password with hashed password
- * @param {string} enteredPassword - Password to check
- * @returns {Promise<boolean>}
  */
 userSchema.methods.comparePassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
 /**
- * Get public profile (without sensitive data)
+ * Get public profile
  */
 userSchema.methods.getPublicProfile = function() {
   return {

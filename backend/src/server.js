@@ -5,26 +5,16 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/database');
 
-// Load environment variables
 dotenv.config();
-
-// Create Express app
 const app = express();
-
-// Connect to MongoDB
 connectDB();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Define PORT
 const PORT = process.env.PORT || 5000;
 
-// ========== ROUTES ==========
-
-// Welcome route
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Welcome to LMS API',
@@ -32,12 +22,14 @@ app.get('/', (req, res) => {
     endpoints: {
       auth: '/api/auth',
       users: '/api/users',
+      courses: '/api/courses',
+      enrollments: '/api/enrollments',  // ✅ NEW
+      ai: '/api/ai',
       health: '/health'
     }
   });
 });
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 
@@ -49,14 +41,18 @@ app.get('/health', (req, res) => {
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const enrollmentRoutes = require('./routes/enrollmentRoutes');  // ✅ NEW
+const aiRoutes = require('./routes/aiRoutes');
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/enrollments', enrollmentRoutes);  // ✅ NEW
+app.use('/api/ai', aiRoutes);
 
-// ========== ERROR HANDLING ==========
-
-// 404 handler
+// Error handlers
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
@@ -64,7 +60,6 @@ app.use((req, res, next) => {
   });
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -74,7 +69,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV}`);
