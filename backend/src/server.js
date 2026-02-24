@@ -1,5 +1,3 @@
-
-
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -7,13 +5,46 @@ const connectDB = require('./config/database');
 
 dotenv.config();
 const app = express();
+
+// Connect Database
 connectDB();
 
-app.use(cors());
+// ------------------ CORS CONFIG ------------------
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.FRONTEND_URL
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman, mobile apps)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log("Blocked by CORS:", origin);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
+
+// -------------------------------------------------
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 5000;
+
+// ------------------ ROUTES ------------------
 
 app.get('/', (req, res) => {
   res.json({ 
@@ -38,13 +69,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const enrollmentRoutes = require('./routes/enrollmentRoutes'); 
 const aiRoutes = require('./routes/aiRoutes');
-
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -52,16 +81,19 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/enrollments', enrollmentRoutes);  
 app.use('/api/ai', aiRoutes);
 
+// ------------------ 404 HANDLER ------------------
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: `Route ${req.originalUrl} not found`
   });
 });
 
+// ------------------ ERROR HANDLER ------------------
+
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("ERROR:", err.message);
   res.status(500).json({
     success: false,
     message: 'Something went wrong!',
@@ -69,8 +101,10 @@ app.use((err, req, res, next) => {
   });
 });
 
+// ------------------ START SERVER ------------------
+
 app.listen(PORT, () => {
-  console.log(` Server is running on port ${PORT}`);
-  console.log(` Environment: ${process.env.NODE_ENV}`);
-  console.log(` URL: http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV}`);
+  console.log(`✅ Allowed Origins:`, allowedOrigins);
 });
