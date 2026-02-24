@@ -43,7 +43,7 @@ function RegisterPage() {
     setLoading(true);
 
     try {
-      const { confirmPassword, ...registerData } = formData;
+      const { confirmPassword: _, ...registerData } = formData;
       const response = await authService.register(registerData);
 
       if (response.success) {
