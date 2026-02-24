@@ -1,4 +1,4 @@
-// src/components/courses/AICourseGenerator.jsx
+
 
 import { useState } from 'react';
 import { aiService } from '../../api/aiService';

@@ -1,4 +1,3 @@
-// src/pages/courses/CoursesPage.jsx
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +13,7 @@ function CoursesPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All');
 
-  // Fetch courses
+  
   const { data: coursesData, isLoading, error } = useQuery({
     queryKey: ['courses'],
     queryFn: async () => {

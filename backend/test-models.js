@@ -11,7 +11,7 @@ async function listAvailableModels() {
     const data = await response.json();
     
     if (response.ok && data.models) {
-      console.log('✅ Available Models:\n');
+      console.log(' Available Models:\n');
       data.models.forEach(model => {
         console.log(`Model: ${model.name}`);
         console.log(`Display Name: ${model.displayName}`);
@@ -19,7 +19,7 @@ async function listAvailableModels() {
         console.log('---');
       });
     } else {
-      console.log('❌ Failed to fetch models');
+      console.log(' Failed to fetch models');
       console.log('Error:', JSON.stringify(data, null, 2));
     }
   } catch (error) {
@@ -51,12 +51,12 @@ async function testModelDirectly(modelName) {
     const data = await response.json();
     
     if (response.ok) {
-      console.log(`✅ ${modelName} WORKS!`);
+      console.log(` ${modelName} WORKS!`);
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
       console.log('Response:', text);
       return modelName;
     } else {
-      console.log(`❌ ${modelName} FAILED - ${data.error?.message}`);
+      console.log(` ${modelName} FAILED - ${data.error?.message}`);
       return null;
     }
   } catch (error) {

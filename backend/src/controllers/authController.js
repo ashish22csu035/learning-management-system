@@ -34,13 +34,13 @@ const register = async (req, res) => {
       name,
       email,
       password,
-      role: role || 'student'  // Default to student if not provided
+      role: role || 'student'  
     });
 
-    // Generate JWT token
+    
     const token = generateToken(user._id);
 
-    // Send response
+    
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
@@ -51,7 +51,7 @@ const register = async (req, res) => {
   } catch (error) {
     console.error('Register Error:', error);
     
-    // Handle validation errors
+    
     if (error.name === 'ValidationError') {
       const messages = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({
@@ -78,7 +78,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validation
+    
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -86,7 +86,7 @@ const login = async (req, res) => {
       });
     }
 
-    // Find user and include password (it's excluded by default)
+    
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
@@ -96,7 +96,7 @@ const login = async (req, res) => {
       });
     }
 
-    // Check if account is active
+    
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
@@ -104,7 +104,7 @@ const login = async (req, res) => {
       });
     }
 
-    // Compare passwords
+    
     const isPasswordMatch = await user.comparePassword(password);
 
     if (!isPasswordMatch) {
@@ -114,11 +114,11 @@ const login = async (req, res) => {
       });
     }
 
-    // Update last login
+    
     user.lastLogin = Date.now();
     await user.save();
 
-    // Generate token
+    
     const token = generateToken(user._id);
 
     res.status(200).json({
@@ -145,7 +145,7 @@ const login = async (req, res) => {
  */
 const getMe = async (req, res) => {
   try {
-    // req.user is set by auth middleware
+    
     const user = await User.findById(req.user.id);
 
     if (!user) {

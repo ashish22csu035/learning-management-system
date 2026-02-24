@@ -1,16 +1,16 @@
-// src/api/axiosConfig.js
+
 
 import axios from 'axios';
 
-// Create axios instance with base configuration
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor - add token to requests
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -26,7 +26,7 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor - handle errors globally
+
 api.interceptors.response.use(
   (response) => {
     return response;

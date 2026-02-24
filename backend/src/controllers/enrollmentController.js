@@ -1,4 +1,4 @@
-// src/controllers/enrollmentController.js
+
 
 const Enrollment = require('../models/Enrollment');
 const Course = require('../models/Course');
@@ -13,7 +13,7 @@ const enrollInCourse = async (req, res) => {
     const courseId = req.params.courseId;
     const studentId = req.user._id;
 
-    // Check if course exists and is published
+    
     const course = await Course.findById(courseId);
 
     if (!course) {
@@ -30,7 +30,7 @@ const enrollInCourse = async (req, res) => {
       });
     }
 
-    // Check if already enrolled
+    
     const existingEnrollment = await Enrollment.findOne({
       student: studentId,
       course: courseId,
@@ -43,13 +43,13 @@ const enrollInCourse = async (req, res) => {
       });
     }
 
-    // Create enrollment
+    
     const enrollment = await Enrollment.create({
       student: studentId,
       course: courseId,
     });
 
-    // Update course enrollment count
+    
     course.enrollmentCount += 1;
     await course.save();
 

@@ -22,27 +22,27 @@ const getAllCourses = async (req, res) => {
       limit = 10
     } = req.query;
 
-    // Build query
+    
     let query = { isPublished: true };
 
-    // Filter by category
+    
     if (category) {
       query.category = category;
     }
 
-    // Filter by level
+   
     if (level) {
       query.level = level;
     }
 
-    // Filter by price range
+   
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
 
-    // Text search
+    
     if (search) {
       query.$text = { $search: search };
     }
@@ -53,19 +53,19 @@ const getAllCourses = async (req, res) => {
     else if (sort === 'price-desc') sortOption.price = -1;
     else if (sort === 'rating') sortOption.averageRating = -1;
     else if (sort === 'popular') sortOption.enrollmentCount = -1;
-    else sortOption.createdAt = -1; // Default: newest first
+    else sortOption.createdAt = -1; 
 
-    // Pagination
+    
     const skip = (page - 1) * limit;
 
-    // Execute query
+    
     const courses = await Course.find(query)
-      .populate('instructor', 'name email avatar')  // Get instructor details
+      .populate('instructor', 'name email avatar')  
       .sort(sortOption)
       .skip(skip)
       .limit(Number(limit));
 
-    // Get total count for pagination
+    
     const total = await Course.countDocuments(query);
 
     res.status(200).json({
@@ -104,7 +104,7 @@ const getCourseById = async (req, res) => {
       });
     }
 
-    // Only show published courses to public (unless you're the instructor or admin)
+    
     if (!course.isPublished && 
         req.user?.role !== 'admin' && 
         req.user?._id.toString() !== course.instructor._id.toString()) {
@@ -157,7 +157,7 @@ const createCourse = async (req, res) => {
       requirements
     } = req.body;
 
-    // Validation
+    
     if (!title || !description || !category || !level || price === undefined || !duration) {
       return res.status(400).json({
         success: false,
@@ -165,11 +165,11 @@ const createCourse = async (req, res) => {
       });
     }
 
-    // Create course with instructor as logged-in user
+    
     const course = await Course.create({
       title,
       description,
-      instructor: req.user._id,  // From auth middleware
+      instructor: req.user._id, 
       category,
       level,
       price,
@@ -289,7 +289,7 @@ const deleteCourse = async (req, res) => {
       });
     }
 
-    // Check ownership
+    
     if (course.instructor.toString() !== req.user._id.toString() && 
         req.user.role !== 'admin') {
       return res.status(403).json({

@@ -1,4 +1,3 @@
-// src/pages/courses/CourseDetailPage.jsx
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,7 +24,7 @@ function CourseDetailPage() {
   const queryClient = useQueryClient();
   const { isAuthenticated, user } = useAuthStore();
 
-  // Fetch course details
+  
   const {
     data: courseData,
     isLoading: courseLoading,
@@ -35,14 +34,14 @@ function CourseDetailPage() {
     queryFn: () => courseService.getCourseById(id),
   });
 
-  // Check enrollment status
+  
   const { data: enrollmentData } = useQuery({
     queryKey: ['enrollment', id],
     queryFn: () => enrollmentService.checkEnrollment(id),
     enabled: isAuthenticated && user?.role === 'student',
   });
 
-  // Enroll mutation
+  
   const enrollMutation = useMutation({
     mutationFn: () => enrollmentService.enrollInCourse(id),
     onSuccess: () => {

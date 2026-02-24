@@ -1,4 +1,4 @@
-// src/components/courses/CourseCard.jsx
+
 
 import { Link } from 'react-router-dom';
 import { Clock, Users, Star, BookOpen } from 'lucide-react';

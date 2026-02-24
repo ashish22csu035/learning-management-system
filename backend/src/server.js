@@ -1,4 +1,4 @@
-// src/server.js
+
 
 const express = require('express');
 const dotenv = require('dotenv');
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       users: '/api/users',
       courses: '/api/courses',
-      enrollments: '/api/enrollments',  // ✅ NEW
+      enrollments: '/api/enrollments', 
       ai: '/api/ai',
       health: '/health'
     }
@@ -38,21 +38,21 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Import routes
+
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
-const enrollmentRoutes = require('./routes/enrollmentRoutes');  // ✅ NEW
+const enrollmentRoutes = require('./routes/enrollmentRoutes'); 
 const aiRoutes = require('./routes/aiRoutes');
 
-// Use routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
-app.use('/api/enrollments', enrollmentRoutes);  // ✅ NEW
+app.use('/api/enrollments', enrollmentRoutes);  
 app.use('/api/ai', aiRoutes);
 
-// Error handlers
+
 app.use((req, res, next) => {
   res.status(404).json({
     success: false,
@@ -70,7 +70,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV}`);
-  console.log(`🔗 URL: http://localhost:${PORT}`);
+  console.log(` Server is running on port ${PORT}`);
+  console.log(` Environment: ${process.env.NODE_ENV}`);
+  console.log(` URL: http://localhost:${PORT}`);
 });

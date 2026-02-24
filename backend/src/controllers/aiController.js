@@ -1,4 +1,4 @@
-// src/controllers/aiController.js
+
 
 const aiService = require('../services/aiService');
 
@@ -11,7 +11,7 @@ const generateCourse = async (req, res) => {
   try {
     const { topic, category, level } = req.body;
 
-    // Validation
+    
     if (!topic || !category || !level) {
       return res.status(400).json({
         success: false,
@@ -19,7 +19,7 @@ const generateCourse = async (req, res) => {
       });
     }
 
-    console.log(`🤖 Generating course: ${topic} (${category}, ${level})`);
+    console.log(` Generating course: ${topic} (${category}, ${level})`);
 
     const result = await aiService.generateCourseContent(topic, category, level);
 

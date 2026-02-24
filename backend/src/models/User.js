@@ -1,12 +1,10 @@
-// src/models/User.js
+
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
-/**
- * User Schema Definition
- */
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -84,44 +82,37 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// ========== MIDDLEWARE ==========
 
-/**
- * Hash password before saving
- * FIXED: Removed next parameter - Mongoose 6+ doesn't need it
- */
+
+
 userSchema.pre('save', async function() {
-  // Only hash if password is modified
+  
   if (!this.isModified('password')) {
     return;
   }
 
   try {
-    // Generate salt
+   
     const salt = await bcrypt.genSalt(10);
     
-    // Hash password
+    
     this.password = await bcrypt.hash(this.password, salt);
     
-    console.log(`✅ Password hashed for user: ${this.email}`);
+    console.log(` Password hashed for user: ${this.email}`);
   } catch (error) {
-    console.error('❌ Error hashing password:', error);
+    console.error(' Error hashing password:', error);
     throw error;
   }
 });
 
-// ========== INSTANCE METHODS ==========
 
-/**
- * Compare entered password with hashed password
- */
+
+
 userSchema.methods.comparePassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-/**
- * Get public profile
- */
+
 userSchema.methods.getPublicProfile = function() {
   return {
     id: this._id,
@@ -135,16 +126,12 @@ userSchema.methods.getPublicProfile = function() {
   };
 };
 
-// ========== STATIC METHODS ==========
 
-/**
- * Find user by email
- */
 userSchema.statics.findByEmail = async function(email) {
   return await this.findOne({ email: email.toLowerCase() });
 };
 
-// Create and export model
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

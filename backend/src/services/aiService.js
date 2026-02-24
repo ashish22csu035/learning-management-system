@@ -1,8 +1,8 @@
-// src/services/aiService.js
+
 
 const { GoogleGenAI } = require('@google/genai');
 
-// Initialize Gemini AI with new SDK
+
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY
 });
@@ -77,9 +77,7 @@ Make it professional, realistic, and marketable. The course should provide real 
   }
 };
 
-/**
- * Generate course description only (faster)
- */
+
 const generateDescription = async (title, category) => {
   try {
     const prompt = `Write a compelling course description (200-250 characters) for an online course titled "${title}" in the ${category} category. Make it professional and engaging. Only return the description text, nothing else.`;
@@ -105,9 +103,7 @@ const generateDescription = async (title, category) => {
   }
 };
 
-/**
- * Generate learning outcomes
- */
+
 const generateLearningOutcomes = async (title, level) => {
   try {
     const prompt = `Generate 5 specific learning outcomes for a ${level} level course titled "${title}". 

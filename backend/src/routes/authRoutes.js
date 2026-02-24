@@ -1,10 +1,10 @@
-// src/routes/authRoutes.js
+
 
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/auth');
 
-// Import controller functions
+
 const {
   register,
   login,
