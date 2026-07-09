@@ -14,7 +14,8 @@ connectDB();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://learning-management-system-ten-zeta.vercel.app"
+  "https://learning-management-system-ten-zeta.vercel.app",
+  "https://learning-management-system-ibio7cnc8.vercel.app"
 ];
 
 app.use(cors({
